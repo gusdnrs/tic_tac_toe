@@ -1,50 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --bg-color: #f2f5f8;
+  --card-bg: #ffffff;
+  --toss-blue: #0064ff;
+  --text-main: #191f28;
+  --text-sub: #4e5968;
+  --clay-shadow-out: 8px 8px 16px 0 rgba(0, 0, 0, 0.05);
+  --clay-shadow-in: inset -4px -4px 8px 0 rgba(0, 0, 0, 0.05), inset 4px 4px 8px 0 rgba(255, 255, 255, 0.9);
+  --btn-radius: 32px;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #121212;
-  color: #e0e0e0;
+  background-color: var(--bg-color);
+  color: var(--text-main);
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin-top: 0;
-  color: #ffffff;
-}
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-
-/* Game Layout */
+/* Game Container - Toss Card Style */
 .game {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
-  padding: 2rem;
-  background: #1e1e1e;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  gap: 2.5rem;
+  padding: 3rem;
+  background: var(--card-bg);
+  border-radius: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
 }
 
 @media (min-width: 768px) {
   .game {
     flex-direction: row;
     align-items: flex-start;
+    padding: 4rem;
   }
 }
 
@@ -54,117 +53,146 @@ button {
   align-items: center;
 }
 
-/* Status */
+/* Status Message */
 .status {
-  margin-bottom: 20px;
-  font-size: 24px;
-  font-weight: bold;
+  margin-bottom: 30px;
+  font-size: 28px;
+  font-weight: 700;
   text-align: center;
-  min-height: 36px;
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  color: var(--text-main);
+  letter-spacing: -0.5px;
 }
 
-/* Board */
+/* Board Layout */
 .board-row {
   display: flex;
 }
 
-.board-row:after {
-  clear: both;
-  content: '';
-  display: table;
-}
-
+/* Square - Claymorphism Button */
 .square {
-  background: #2c2c2c;
-  border: 2px solid #3e3e3e;
-  float: left;
-  font-size: 60px;
-  font-weight: bold;
-  line-height: 120px;
+  background: #f8fafc;
+  border: none;
+  border-radius: var(--btn-radius);
+  margin: 8px;
   height: 120px;
   width: 120px;
-  margin-right: -2px;
-  margin-top: -2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0;
-  text-align: center;
-  transition: all 0.2s ease;
-  color: #fff;
-}
-
-.square.vanishing {
-  opacity: 0.5;
-  animation: pulse 1.5s infinite;
-  background-color: #3d2b2b;
-}
-
-@keyframes pulse {
-  0% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 0.2; transform: scale(0.95); }
-  100% { opacity: 0.5; transform: scale(1); }
+  box-shadow: var(--clay-shadow-out), var(--clay-shadow-in);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  cursor: pointer;
 }
 
 .square:hover {
-  background: #383838;
-  z-index: 1;
+  transform: translateY(-4px) scale(1.02);
+  background: #ffffff;
+  box-shadow: 12px 12px 24px 0 rgba(0, 0, 0, 0.08), var(--clay-shadow-in);
 }
 
-.square:focus {
-  outline: none;
-  background: #383838;
+.square:active {
+  transform: scale(0.95);
+  box-shadow: inset 4px 4px 8px 0 rgba(0, 0, 0, 0.05);
 }
 
-/* Neon Effects */
-.square.is-x {
-  color: #00e5ff;
-  text-shadow: 0 0 10px #00e5ff, 0 0 20px #00e5ff;
+/* 3D Icons - CSS Pure Implementation */
+.icon-x {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.square.is-o {
-  color: #ff4081;
-  text-shadow: 0 0 10px #ff4081, 0 0 20px #ff4081;
+.icon-x__line {
+  position: absolute;
+  width: 14px;
+  height: 70px;
+  background-color: var(--toss-blue);
+  border-radius: 10px;
+  box-shadow: 4px 4px 10px rgba(0, 100, 255, 0.2), 
+              inset -2px -2px 4px rgba(0, 0, 0, 0.1), 
+              inset 2px 2px 4px rgba(255, 255, 255, 0.5);
 }
 
-/* Game Info / History */
+.icon-x__line:first-child { transform: rotate(45deg); }
+.icon-x__line:last-child { transform: rotate(-45deg); }
+
+.icon-o {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  border: 14px solid #ff4081;
+  box-shadow: 4px 4px 10px rgba(255, 64, 129, 0.2), 
+              inset -3px -3px 6px rgba(0, 0, 0, 0.15), 
+              inset 3px 3px 6px rgba(255, 255, 255, 0.6);
+  background: transparent;
+}
+
+/* Square Hover effect on icons */
+.square:hover .icon-x__line { transform: rotate(45deg) scale(1.05); }
+.square:hover .icon-x__line:last-child { transform: rotate(-45deg) scale(1.05); }
+.square:hover .icon-o { transform: scale(1.05); }
+
+/* Vanishing Animation */
+.square.vanishing {
+  animation: toss-pulse 2s infinite ease-in-out;
+  border: 4px dashed #e5e8eb;
+}
+
+@keyframes toss-pulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.92); filter: grayscale(0.5); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Game Info / Move List */
 .game-info {
   margin-top: 20px;
-  min-width: 200px;
+  min-width: 260px;
 }
 
 @media (min-width: 768px) {
   .game-info {
     margin-top: 0;
-    margin-left: 30px;
+    margin-left: 40px;
   }
+}
+
+.game-info h2 {
+  font-size: 18px;
+  color: var(--text-sub);
+  margin-bottom: 20px;
 }
 
 .game-info ol {
   padding: 0;
   list-style: none;
-  max-height: 280px;
+  max-height: 400px;
   overflow-y: auto;
 }
 
 .game-info li {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .game-info button {
   width: 100%;
-  padding: 10px 15px;
-  background: #333;
-  border: 1px solid #444;
-  color: #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 14px 20px;
+  background: #f1f4f6;
+  border: none;
+  color: var(--text-sub);
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 600;
   transition: all 0.2s;
   text-align: left;
 }
 
 .game-info button:hover {
-  background: #444;
-  border-color: #666;
-  color: #fff;
-  /* transform: translateX(4px); */
+  background: #e5e8eb;
+  color: var(--toss-blue);
+  transform: translateX(6px);
 }
