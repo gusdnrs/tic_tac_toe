@@ -1,7 +1,7 @@
 import Square from './Square'; // Square 컴포넌트 임포트
 import { calculateWinner } from '../script/calculateWinner'; // 승리자 계산 함수 임포트
 
-export default function Board({ xIsNext, squares, onPlay }) {
+export default function Board({ xIsNext, squares, onPlay, vanishingIndex }) {
   const winner = calculateWinner(squares); // 승리자 계산
   let status; // 상태 메시지 변수
   winner ? status = 'Winner: ' + winner : status = 'Next Player: ' + (xIsNext ? 'X' : 'O'); // 승리자 있으면 승리자, 없으면 다음 플레이어 표시
@@ -31,7 +31,7 @@ export default function Board({ xIsNext, squares, onPlay }) {
   }
 
   function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) {
+    if ((squares[i] && i !== vanishingIndex) || calculateWinner(squares)) {
       return; 
     }
     // 부모 컴포넌트에 클릭된 인덱스를 전달합니다.
