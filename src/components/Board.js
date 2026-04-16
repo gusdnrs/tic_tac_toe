@@ -16,6 +16,7 @@ export default function Board({ xIsNext, squares, onPlay }) {
           key={boardIndex}
           value={squares[boardIndex]}
           onSquareClick={() => handleClick(boardIndex)}
+          isVanishing={boardIndex === vanishingIndex}
         />
       );
     }
@@ -31,11 +32,10 @@ export default function Board({ xIsNext, squares, onPlay }) {
 
   function handleClick(i) {
     if (squares[i] || calculateWinner(squares)) {
-      return; // 이미 값이 있거나 승리자가 있으면 아무 동작도 하지 않음
+      return; 
     }
-    const nextSquares = squares.slice(); // squares Array 얕은 복사
-    nextSquares[i] = xIsNext ? 'X' : 'O'; // 복사한 Array 의 i 번째 요소에 'X' or 'O' 할당
-    onPlay(nextSquares); // 부모 컴포넌트에 새로운 상태 전달
+    // 부모 컴포넌트에 클릭된 인덱스를 전달합니다.
+    onPlay(i);
   }
 
 

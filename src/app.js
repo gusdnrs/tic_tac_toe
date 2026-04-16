@@ -1,16 +1,31 @@
-import {useState} from 'react';
-import Board from './components/Board'; // Board 컴포넌트 임포트
+import { useState } from 'react';
+import Board from './components/Board';
 
-export default function Game(){
-  const [history, setHistory] = useState([Array(9).fill(null)]); // 9개의 null 요소를 가진 배열로 초기화
-  const [currentMove, setCurrentMove] = useState(0); // 현재 이동 단계 상태
-  const xIsNext = (currentMove % 2) === 0; // 짝수 이동 단계면 X 차례, 홀수면 O 차례
-  const currentSquares = history[currentMove]; // 현재 진행 단계 정보를 변수에 저장
-  const moves = history.map((squares, move) => {
-    let description; // 이동 설명 변수
-    if(move > 0) { // 첫 이동이 아닐 때
+export default function Game() {
+  const [history, setHistory] = useState([[]]); 
+  const [currentMove, setCurrentMove] = useState(0); 
+
+  const xIsNext = (currentMove % 2) === 0;
+  const currentSequence = history[currentMove];
+
+  const currentSquares = Array(9).fill(null);
+  const startIndex = Math.max(0, currentSequence.length - 7);
+  
+  for (let i = startIndex; i < currentSequence.length; i++) {
+    const squareIndex = currentSequence[i];
+    currentSquares[squareIndex] = (i % 2 === 0 ? 'X' : 'O');
+  }
+
+  // 다음 수(8번째)를 둘 때 사라질 칸의 인덱스 계산
+  // 보드에 돌이 7개 꽉 찼을 때만 발생함
+  const vanishingIndex = currentSequence.length === 7 ? currentSequence[0] : null;
+
+  const moves = history.map((_, move) => {
+    let description;
+    if (move > 0) {
       description = 'Go to move #' + move;
-    } else { //        이동일 때
+      if (move > 7) description += ' (Stone vanished)';
+    } else {
       description = 'Go to game start';
     }
     return (
@@ -20,30 +35,34 @@ export default function Game(){
         </button>
       </li>
     );
-  } );
+  });
 
-  function handlePlay(nextSquares) { // Board 컴포넌트에서 호출되는 함수
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares]; // 현재 이동 단계까지의 기록과 새로운 상태를 합침
-    setHistory(nextHistory); // 기록 상태 업데이트
-    setCurrentMove(nextHistory.length -1); // 현재 이동 단계를 최신 상태로 설정
+  function handlePlay(clickedIndex) {
+    const nextHistory = [
+      ...history.slice(0, currentMove + 1), 
+      [...currentSequence, clickedIndex]
+    ];
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
   }
 
-  function jumpTo(nextMove){
-    setCurrentMove(nextMove); // 현재 이동 단계 업데이트
+  function jumpTo(nextMove) {
+    setCurrentMove(nextMove);
   }
 
-  return<>
+  return (
     <div className="game">
       <div className="game-board">
         <Board 
           xIsNext={xIsNext}
           squares={currentSquares}
           onPlay={handlePlay}
+          vanishingIndex={vanishingIndex}
         />
       </div>
       <div className="game-info">
         <ol>{moves}</ol>
       </div>
     </div>
-  </>
+  );
 }
